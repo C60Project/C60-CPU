@@ -80,6 +80,8 @@ local function run(msg, matches)
 #- promote : by <reply|id|username> 
 #- demote : by <reply|id|username> 
 
+
+*Use |!| before each command
 ☑ @C60_CPU ]]
     return text
   else
@@ -94,7 +96,7 @@ return {
     "!help: Show list of plugins.",
   },
   patterns = {
-    "^help$",
+    "^!help$",
   }, 
   run = run,
 }
