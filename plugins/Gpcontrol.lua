@@ -209,31 +209,31 @@ local function unlock_group_link(msg, data)
     else
         data[tostring(msg.to.id)]['settings']['lock_link'] = 'no'
         save_data(_config.moderation.data, data)
-    return 'Anti link has been unlocked'
+    return '#Links unlocked'
     end
 end
 
 local function lock_group_inviteme(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_inviteme_lock = data[tostring(msg.to.id)]['settings']['lock_inviteme']
     if group_inviteme_lock == 'yes' then
-        return 'Join group already locked'
+        return '#already locked'
     else
         data[tostring(msg.to.id)]['settings']['lock_inviteme'] = 'yes'
         save_data(_config.moderation.data, data)
     end
-    return 'Join group has been locked'
+    return '#Join group locked'
 end
 
 local function unlock_group_inviteme(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#moderators only"
     end
     local group_inviteme_lock = data[tostring(msg.to.id)]['settings']['lock_inviteme']
     if group_inviteme_lock == 'no' then
-        return 'Join group is not locked'
+        return '#Already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_inviteme'] = 'no'
         save_data(_config.moderation.data, data)
@@ -243,29 +243,29 @@ end
 
 local function lock_group_photo(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#moderators only!"
     end
     local group_photo_lock = data[tostring(msg.to.id)]['settings']['lock_photo']
     if group_photo_lock == 'yes' then
-        return 'Group photo is already locked'
+        return '#already locked'
     else
         data[tostring(msg.to.id)]['settings']['set_photo'] = 'waiting'
         save_data(_config.moderation.data, data)
     end
-    return 'Please send me the group photo now'
+    return '#Please send me the group photo now'
 end
 
 local function unlock_group_photo(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#moderators only!"
     end
     local group_photo_lock = data[tostring(msg.to.id)]['settings']['lock_photo']
     if group_photo_lock == 'no' then
-        return 'Group photo is not locked'
+        return '#already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_photo'] = 'no'
         save_data(_config.moderation.data, data)
-    return 'Group photo has been unlocked'
+    return '#Group photo unlocked'
     end
 end
 
@@ -291,7 +291,7 @@ end
 -- show group settings
 local function show_group_settings(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#For moderators only!"
     end
     if msg.to.type == 'chat' then
         local settings = data[tostring(msg.to.id)]['settings']
@@ -299,7 +299,7 @@ local function show_group_settings(msg, data)
         for k,v in pairs(data[tostring(msg.to.id)]['blocked_words']) do
             wordlist = wordlist..' / '..k
         end
-        local text = "Group settings:\nLock group name : "..settings.lock_name.."\nLock group photo : "..settings.lock_photo.."\nLock group member : "..settings.lock_member.."\nLock bot : "..settings.lock_bot.."\nLock share link : "..settings.lock_link.."\nLock for public : "..settings.lock_inviteme.."\nAnti sticker : "..settings.lock_sticker.."\nLock share image : "..settings.lock_image.."\nLock share file : "..settings.lock_file.."\n\nBlocked words : "..wordlist
+        local text = "🔩Group settings:\n-#Lock group name : "..settings.lock_name.."\n-#Lock group photo : "..settings.lock_photo.."\n-#Lock group member : "..settings.lock_member.."\n-#Lock bot : "..settings.lock_bot.."\n-#Lock link : "..settings.lock_link.."\n-#Lock for public : "..settings.lock_inviteme.."\n-#Anti sticker : "..settings.lock_sticker.."\n-#Lock share image : "..settings.lock_image.."\n-#Lock share file : "..settings.lock_file.."\n\n🔇Blocked words : "..wordlist
         return text
     else
         local settings = data[tostring(msg.to.id)]['settings']
@@ -307,7 +307,7 @@ local function show_group_settings(msg, data)
         for k,v in pairs(data[tostring(msg.to.id)]['blocked_words']) do
             wordlist = wordlist..' / '..k
         end
-        local text = "Group settings:\nLock group member : "..settings.lock_member.."\nLock bot : "..settings.lock_bot.."\nLock share link : "..settings.lock_link.."\nLock for public : "..settings.lock_inviteme.."\nAnti sticker : "..settings.lock_sticker.."\nLock share image : "..settings.lock_image.."\nLock share file : "..settings.lock_file.."\nLock talking : "..settings.lock_talk.."\n\nBlocked words : "..wordlist
+        local text = "🔩Group settings:\n-#Lock group member : "..settings.lock_member.."\n-#Lock bot : "..settings.lock_bot.."\n-#Lock share link : "..settings.lock_link.."\n-#Lock for public : "..settings.lock_inviteme.."\n-#Anti sticker : "..settings.lock_sticker.."\n-#Lock share image : "..settings.lock_image.."\n-#Lock share file : "..settings.lock_file.."\n-#Lock talking : "..settings.lock_talk.."\n\n🔇Blocked words : "..wordlist \nC60-CPU
         return text
     end
 end
@@ -1075,20 +1075,20 @@ return {
           },
       },
   patterns = {
-    "^/(block) (.+)$",
-    "^/(unblock) (.+)$",
-    "^/(getlink)$",
-    "^/(relink) (.+)$",
-    "^/(setabout) (.*)$",
-    "^/(about)$",
-    "^/(setrules) (.*)$",
-    "^/(rules)$",
-    "^/(setname) (.*)$",
-    "^/(setphoto)$",
-    "^/(close) (.*)$",
-    "^/(open) (.*)$",
-    "^/(group) (settings)$",
-    "^/(join) (.+)$",
+    "^block (.+)$",
+    "^unblock (.+)$",
+    "^getlink$",
+    "^relink (.+)$",
+    "^setabout (.*)$",
+    "^about$",
+    "^setrules (.*)$",
+    "^rules$",
+    "^setname (.*)$",
+    "^setphoto$",
+    "^close (.*)$",
+    "^open (.*)$",
+    "^group (settings)$",
+    "^join (.+)$",
     "%[(photo)%]",
     "%[(document)%]",
     
