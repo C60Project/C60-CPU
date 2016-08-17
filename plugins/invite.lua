@@ -6,7 +6,7 @@ local function callback(extra, success, result)
 	if success == 1 then
 		print("Success!")
 	else
-		send_large_msg(resuser, "Sorry, i can't invite @"..username)
+		send_large_msg(resuser, "#Sorry, i can't invite @"..username)
 	end
 end
 
@@ -21,7 +21,7 @@ local function resuser(extra, success, result)
       chat_add_user(receiver, user, callback, {receiver=receiver, username=username})
     end
   else
-  	send_large_msg(receiver, "User not found!")
+  	send_large_msg(receiver, "#User not found!")
   end
 end
 
@@ -83,8 +83,8 @@ return {
   		},
   	},
   patterns = {
-    "^/(invite) (.*)$",
-    "^/(invite)$",
+    "^invite (.*)$",
+    "^invite$",
   }, 
   run = run,
   moderated = true 
