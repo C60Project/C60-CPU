@@ -71,7 +71,7 @@ local function pre_process(msg)
       local superbanned = is_super_banned(user_id)
       local banned = is_banned(user_id, msg.to.id)
       if superbanned or banned then
-        print('User is banned!')
+        print('#User is banned!')
         if msg.to.type == 'chat' then
           kick_user(user_id, msg.to.id)
         end
@@ -90,12 +90,12 @@ local function pre_process(msg)
     local superbanned = is_super_banned(user_id)
     local banned = is_banned(user_id, chat_id)
     if superbanned then
-      print('SuperBanned user talking!')
+      print('#SuperBanned user talking')
       superban_user(user_id, chat_id)
       msg.text = ''
     end
     if banned then
-      print('Banned user talking!')
+      print('#Banned user talking')
       ban_user(user_id, chat_id)
       msg.text = ''
     end
@@ -115,7 +115,7 @@ local function pre_process(msg)
       msg.text = ''
     end
     if banned then
-      print('Banned user talking!')
+      print('#Banned user talking!')
       ban_user(user_id, chat_id)
       msg.text = ''
     end
@@ -128,7 +128,7 @@ local function username_id(cb_extra, success, result)
    local receiver = cb_extra.receiver
    local member = cb_extra.member
    local chat_id = string.gsub(receiver,'.+#id', '')
-   local text = 'No user @'..member..' in this group.'
+   local text = '#No user @'..member..' in this group.'
    for k,v in pairs(result.members) do
       vusername = v.username
       if vusername == member then
@@ -136,44 +136,44 @@ local function username_id(cb_extra, success, result)
         member_id = v.peer_id
         if get_cmd == 'kick' then
           if member_id == our_id then
-            send_large_msg(receiver, 'Are you kidding?')
+            send_large_msg(receiver, '#Imposible')
             return nil
           end
           local data = load_data(_config.moderation.data)
           if data[tostring('admins')] then
             if data[tostring('admins')][tostring(member_id)] then
-              send_large_msg(receiver, 'You can\'t kick admin!')
+              send_large_msg(receiver, '#You can\'t kick admin!')
               return nil
             end
           end
           if is_spromoted(chat_id, member_id) then
-            return send_large_msg(receiver,'You can\'t kick leader')
+            return send_large_msg(receiver,'#You can\'t kick Gpleader')
           end
           return kick_user(member_id, chat_id)
         end
         if get_cmd == 'ban' then
           if member_id == our_id then
-            send_large_msg(receiver, 'Are you kidding?')
+            send_large_msg(receiver, '#Imposible')
             return nil
           end
           local data = load_data(_config.moderation.data) -- FLUX MOD
           if data[tostring('admins')] then
             if data[tostring('admins')][tostring(member_id)] then
-              send_large_msg(receiver, 'You can\'t ban admin!')
+              send_large_msg(receiver, '#You can\'t ban admin!')
               return nil
             end
           end
           if is_spromoted(chat_id, member_id) then
-            return send_large_msg(receiver, 'You can\'t ban leader')
+            return send_large_msg(receiver, '#You can\'t ban Gpleader')
           end
-          send_large_msg(receiver, 'User @'..member..' ['..member_id..'] banned')
+          send_large_msg(receiver, '#User @'..member..' ['..member_id..'] banned')
           return ban_user(member_id, chat_id)
         end
         if get_cmd == 'sban' then
           if member_id == our_id then
             return nil
           end
-          send_large_msg(receiver, 'User @'..member..' ['..member_id..'] globally banned!')
+          send_large_msg(receiver, '#User @'..member..' ['..member_id..'] globally banned!')
           return superban_user(member_id, chat_id)
         end
       end
@@ -186,7 +186,7 @@ local function channel_username_id(cb_extra, success, result)
    local receiver = cb_extra.receiver
    local chat_id = string.gsub(receiver,'.+#id', '')
    local member = cb_extra.member
-   local text = 'No user @'..member..' in this group.'
+   local text = '#No user @'..member..' in this group.'
    for k,v in pairs(result) do
       vusername = v.username
       if vusername == member then
@@ -194,37 +194,37 @@ local function channel_username_id(cb_extra, success, result)
         member_id = v.peer_id
         if get_cmd == 'kick' then
             if member_id == our_id then
-                send_large_msg(receiver, 'Are you kidding?')
+                send_large_msg(receiver, '#Are you kidding?')
                 return nil
             end
             local data = load_data(_config.moderation.data) -- FLUX MOD
             if data[tostring('admins')] then
               if data[tostring('admins')][tostring(member_id)] then
-                send_large_msg(receiver, 'You can\'t kick admin!')
+                send_large_msg(receiver, '#You can\'t kick admin!')
                 return nil
               end
             end
             if is_spromoted(chat_id, member_id) then
-              return send_large_msg(receiver,'You can\'t kick leader')
+              return send_large_msg(receiver,'#You can\'t kick leader')
             end
             return kick_user_chan(member_id, chat_id)
         end
         if get_cmd == 'ban' then
           if member_id == our_id then
-              send_large_msg(receiver, 'Are you kidding?')
+              send_large_msg(receiver, '#Are you kidding?')
               return nil
           end
           local data = load_data(_config.moderation.data)
           if data[tostring('admins')] then
             if data[tostring('admins')][tostring(member_id)] then
-              send_large_msg(receiver, 'You can\'t ban admin!')
+              send_large_msg(receiver, '#You can\'t ban admin!')
               return nil
             end
           end
           if is_spromoted(chat_id, member_id) then
-            return send_large_msg(receiver, 'You can\'t ban leader')
+            return send_large_msg(receiver, '#You can\'t ban leader')
           end
-          send_large_msg(receiver, 'User @'..member..' ['..member_id..'] banned')
+          send_large_msg(receiver, '#User @'..member..' ['..member_id..'] banned')
           return ban_user(member_id, chat_id)
         end
         if get_cmd == 'sban' then
@@ -241,14 +241,14 @@ local function channel_username_id(cb_extra, success, result)
           local data = load_data(_config.moderation.data)
           if data[tostring('admins')] then
             if data[tostring('admins')][tostring(member_id)] then
-              send_large_msg(receiver, 'You can\'t do this to admin!')
+              send_large_msg(receiver, '#You can\'t do this to admin!')
               return nil
             end
           end
           if is_spromoted(chat_id, member_id) then
-            return send_large_msg(receiver, 'You can\'t do this to leader')
+            return send_large_msg(receiver, '#You can\'t do this to Gpleader')
           end
-          send_large_msg(receiver, 'User '..member_id..' not allowed to talk!')
+          send_large_msg(receiver, '#User '..member_id..' not allowed to talk!')
           return silent_user(member_id, chat_id)
         end
         if get_cmd == 'unsilent' then
@@ -258,7 +258,7 @@ local function channel_username_id(cb_extra, success, result)
           local data = load_data(_config.moderation.data)
           if data[tostring('admins')] then
             if data[tostring('admins')][tostring(member_id)] then
-              send_large_msg(receiver, 'Admin always allowed to talk!')
+              send_large_msg(receiver, '#Admin always allowed to talk!')
               return nil
             end
           end
@@ -294,12 +294,12 @@ local function get_msg_callback(extra, success, result)
     local data = load_data(_config.moderation.data)
     if data[tostring('admins')] then
       if data[tostring('admins')][tostring(user_id)] then
-        return send_large_msg(receiver, 'You can\'t kick admin!')
+        return send_large_msg(receiver, '#You can\'t kick admin!')
       end
     end
     if is_spromoted(chat_id, user_id) then
       print('kick leader')
-      return send_large_msg(receiver,'You can\'t kick leader')
+      return send_large_msg(receiver,'#You can\'t kick leader')
     end
     if group_type == 'chat' then
       return kick_user(user_id, chat_id)
@@ -314,13 +314,13 @@ local function get_msg_callback(extra, success, result)
     local data = load_data(_config.moderation.data) -- FLUX MOD
     if data[tostring('admins')] then
       if data[tostring('admins')][tostring(user_id)] then
-        return send_large_msg(receiver, 'You can\'t ban admin!')
+        return send_large_msg(receiver, '#You can\'t ban admin!')
       end
     end
     if is_spromoted(chat_id, user_id) then
-      return send_large_msg(receiver,'You can\'t ban leader')
+      return send_large_msg(receiver,'#You can\'t ban leader')
     end
-    send_large_msg(receiver, 'User '..username..' ['..user_id..'] banned')
+    send_large_msg(receiver, '#User '..username..' ['..user_id..'] banned')
     if group_type == 'chat' then
       return ban_user(user_id, chat_id)
     else
@@ -331,15 +331,15 @@ end
     if user_id == our_id then
       return nil
     end
-    local hash =  'banned:'..chat_id..':'..user_id
+    local hash =  '#banned:'..chat_id..':'..user_id
     redis:del(hash)
-    return send_large_msg(receiver, 'User '..user_id..' unbanned')
+    return send_large_msg(receiver, '#User '..user_id..' unbanned')
   end
   if get_cmd == 'sban' then
     if user_id == our_id then
       return nil
     end
-    send_large_msg(receiver, 'User '..username..' ['..user_id..'] globally banned!')
+    send_large_msg(receiver, '#User '..username..' ['..user_id..'] globally banned!')
     return superban_user(member_id, chat_id)
   end
   if get_cmd == 'silent' then
@@ -349,14 +349,14 @@ end
     local data = load_data(_config.moderation.data)
     if data[tostring('admins')] then
       if data[tostring('admins')][tostring(user_id)] then
-        send_large_msg(receiver, 'You can\'t do this to admin!')
+        send_large_msg(receiver, '#You can\'t do this to admin!')
         return nil
       end
     end
     if is_spromoted(chat_id, user_id) then
-      return send_large_msg(receiver, 'You can\'t do this to leader')
+      return send_large_msg(receiver, '#You can\'t do this to leader')
     end
-    send_large_msg(receiver, 'User '..user_id..' not allowed to talk!')
+    send_large_msg(receiver, '#User '..user_id..' not allowed to talk!')
     return silent_user(user_id, chat_id)
   end
   if get_cmd == 'unsilent' then
@@ -366,13 +366,13 @@ end
     local data = load_data(_config.moderation.data)
     if data[tostring('admins')] then
       if data[tostring('admins')][tostring(user_id)] then
-        send_large_msg(receiver, 'Admin always allowed to talk!')
+        send_large_msg(receiver, '#Admin always allowed to talk!')
         return nil
       end
     end
     local hash =  'silent:'..chat_id..':'..user_id
     redis:del(hash)
-    return send_large_msg(receiver, 'User '..user_id..' allowed to talk')
+    return send_large_msg(receiver, '#User '..user_id..' allowed to talk')
   end
 end
 
@@ -409,14 +409,14 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data) -- FLUX MOD
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(user_id)] then
-            return 'You can\'t ban admin!'
+            return '#You can\'t ban admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
-          return 'You can\'t ban leader'
+          return '#You can\'t ban leader'
         end
         ban_user(user_id, chat_id)
-        send_large_msg(receiver, 'User '..user_id..' banned!')
+        send_large_msg(receiver, '#User '..user_id..' banned!')
       else
           local member = string.gsub(matches[2], '@', '')
           channel_get_users(receiver, chanel_username_id, {get_cmd=get_cmd, receiver=receiver, member=member})
@@ -434,9 +434,9 @@ local function run(msg, matches)
       if string.match(matches[2], '^%d+$') then
         local hash =  'banned:'..chat_id..':'..user_id
         redis:del(hash)
-        return 'User '..user_id..' unbanned'
+        return '#User '..user_id..' unbanned'
       else
-        return 'Use user id only'
+        return '#Use user id only'
       end
     end
     if matches[1] == 'sban' and is_admin(msg) then
@@ -455,14 +455,14 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data) -- FLUX MOD
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(user_id)] then
-            return 'You can\'t ban admin!'
+            return '#You can\'t ban admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
-          return 'You can\'t ban leader'
+          return '#You can\'t ban leader'
         end
         ban_user(user_id, chat_id)
-        send_large_msg(receiver, 'User '..user_id..' globally banned!')
+        send_large_msg(receiver, '#User '..user_id..' globally banned!')
       else
         local member = string.gsub(matches[2], '@', '')
         channel_get_users(receiver, chanel_username_id, {get_cmd=get_cmd, receiver=receiver, chat_id=chat_id, member=member})
@@ -490,11 +490,11 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data)
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(matches[2])] then
-            return 'You can\'t kick admin!'
+            return '#You can\'t kick admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
-          return 'You can\'t kick leader'
+          return '#You can\'t kick leader'
         end
         kick_user_chan(matches[2], msg.to.id)
       else
@@ -517,14 +517,14 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data)
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(matches[2])] then
-            return 'You can\'t do this to admin!'
+            return '#You can\'t do this to admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
-          return 'You can\'t do this to leader'
+          return '#You can\'t do this to leader'
         end
         silent_user(matches[2], msg.to.id)
-        send_large_msg(receiver, 'User '..matches[2]..' not allowed to talk!')
+        send_large_msg(receiver, '#User '..matches[2]..' not allowed to talk!')
       else
         local member = string.gsub(matches[2], '@', '')
         channel_get_users(receiver, channel_username_id, {get_cmd=get_cmd, receiver=receiver, chat_id=msg.to.id, member=member})
@@ -545,12 +545,12 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data)
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(matches[2])] then
-            return 'Admin always allowed to talk!'
+            return '#Admin always allowed to talk!'
           end
         end
         local hash =  'silent:'..msg.to.id..':'..matches[2]
         redis:del(hash)
-        return 'User '..user_id..' allowed to talk'
+        return '#User '..user_id..' allowed to talk'
       else
         local member = string.gsub(matches[2], '@', '')
         channel_get_users(receiver, channel_username_id, {get_cmd=get_cmd, receiver=receiver, chat_id=msg.to.id, member=member})
@@ -575,11 +575,11 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data) -- FLUX MOD
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(user_id)] then
-            return 'You can\'t ban admin!'
+            return '#You can\'t ban admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
-          return 'You can\'t ban leader'
+          return '#You can\'t ban leader'
         end
           ban_user(user_id, chat_id)
           send_large_msg(receiver, 'User '..user_id..' banned!')
@@ -594,9 +594,9 @@ local function run(msg, matches)
       if string.match(matches[2], '^%d+$') then
         local hash =  'banned:'..chat_id..':'..user_id
         redis:del(hash)
-        return 'User '..user_id..' unbanned'
+        return '#User '..user_id..' unbanned'
       else
-        return 'Use user id only'
+        return '#Use user id only'
       end
     end
     if matches[1] == 'sban' and is_admin(msg) then
@@ -615,7 +615,7 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data) -- FLUX MOD
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(user_id)] then
-            return 'You can\'t ban admin!'
+            return '#You can\'t ban admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) and not is_admin(msg) then
@@ -648,12 +648,12 @@ local function run(msg, matches)
         local data = load_data(_config.moderation.data)
         if data[tostring('admins')] then
           if data[tostring('admins')][tostring(matches[2])] then
-            return 'You can\'t kick admin!'
+            return '#You can\'t kick admin!'
           end
         end
         if is_spromoted(msg.to.id, matches[2]) then
           if not is_admin(msg) then
-            return 'You can\'t kick leader'
+            return '#You can\'t kick leader'
           end
         end
         kick_user(matches[2], msg.to.id)
@@ -688,20 +688,20 @@ return {
           },
       },
   patterns = {
-    "^/(ban) (.*)$",
-    "^/(unban) (.*)$",
-    "^/(unban)$",
-    "^/(ban)$",
-    "^/(sban) (.*)$",
-    "^/(unsban) (.*)$",
-    "^/(sban)$",
-    "^/(kick) (.*)$",
-    "^/(kick)$",
-    "^/(kickme)$",
-    "^/(silent) (.*)$", --only for supergroup
-    "^/(silent)$",
-    "^/(unsilent) (.*)$",
-    "^/(unsilent)$", --till here
+    "^ban (.*)$",
+    "^unban (.*)$",
+    "^unban$",
+    "^ban$",
+    "^sban (.*)$",
+    "^unsban (.*)$",
+    "^sban$",
+    "^kick (.*)$",
+    "^kick$",
+    "^kickme$",
+    "^silent (.*)$", --only for supergroup
+    "^silent$",
+    "^unsilent (.*)$",
+    "^unsilent$", --till here
     "^!!tgservice (.+)$",
   }, 
   run = run,
