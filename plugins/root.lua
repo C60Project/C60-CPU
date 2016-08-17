@@ -16,7 +16,7 @@ text= textt .."\n〰〰〰〰〰〰〰〰〰〰〰\nC60-CPU™"
     end
   if matches[1] == 'sleep' then
 textt = io.popen("sleep " ..matches[2]):read('*all')
-    text= textt .."\n💤It was a good sleep😴"
+    text= textt .."\n#It was a good sleep"
     end
   return text                                                                                                                        
 end  
@@ -27,7 +27,7 @@ return {
     '^[Rr]oot@[Ee]lectrovirus:~$ (.*)$',
   '^[Uu]ser@RootServer:~$ (sleep) (.*)$',
     '^[Uu]ser@RootServer:~$ (.*)$'
-   ^$ (.*)$'
+   '^$(.*)$',
   },                                                                                                                                 
   run = run,                                                                                                                         
   moderated = true                                                                                                                   
