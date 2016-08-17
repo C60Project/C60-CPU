@@ -1,1 +1,2 @@
-C60-CPU telegramBot
+#C60-CPU telegramBot
+Install it like others :)
