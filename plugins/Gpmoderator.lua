@@ -14,22 +14,22 @@ local function spromote(receiver, user_id, username)
   local chat_id = string.gsub(receiver, '.+#id', '')
   local data = load_data(_config.moderation.data)
   if not data[tostring(chat_id)] then
-    return send_large_msg(receiver, 'Group is not added.')
+    return send_large_msg(receiver, '#Group is not added.')
   end
   if data[tostring(chat_id)]['moderators'][tostring(user_id)] then
     if is_spromoted(chat_id, user_id) then
-      return send_large_msg(receiver, 'Already as moderator leader')
+      return send_large_msg(receiver, '#Already as moderator leader')
     end
     local hash =  'sprom:'..chat_id..':'..user_id
   redis:set(hash, true)
-  send_large_msg(receiver, 'User '..username..' ['..user_id..'] promoted as moderator leader')
+  send_large_msg(receiver, '#User '..username..' ['..user_id..'] promoted as moderator leader')
   return
   else
     data[tostring(chat_id)]['moderators'][tostring(user_id)] = string.gsub(username, '@', '')
     save_data(_config.moderation.data, data)
     local hash =  'sprom:'..chat_id..':'..user_id
     redis:set(hash, true)
-    send_large_msg(receiver, 'User '..username..' ['..user_id..'] promoted as moderator leader')
+    send_large_msg(receiver, '#User '..username..' ['..user_id..'] promoted as moderator leader')
     return
   end
 end
@@ -37,14 +37,14 @@ end
 local function sdemote(receiver, user_id, username)
   local chat_id = string.gsub(receiver, '.+#id', '')
   if not is_spromoted(chat_id, user_id) then
-    return send_large_msg(receiver, 'Not a moderator leader')
+    return send_large_msg(receiver, '#Not a moderator leader')
   end
   local data = load_data(_config.moderation.data)
   data[chat_id]['moderators'][tostring(user_id)] = nil
   save_data(_config.moderation.data, data)
   local hash =  'sprom:'..chat_id..':'..user_id
   redis:del(hash)
-  send_large_msg(receiver, 'User '..username..' ['..user_id..'] demoted!')
+  send_large_msg(receiver, '#User '..username..' ['..user_id..'] demoted!')
 end
 
 local function check_member(cb_extra, success, result)
@@ -67,8 +67,8 @@ local function check_member(cb_extra, success, result)
               lock_inviteme = 'no',
               lock_sticker = 'no',
               lock_image = 'no',
-              --lock_video = 'no',
-              --lock_audio = 'no',
+              lock_video = 'no',
+              lock_audio = 'no',
               lock_file = 'no',
               lock_talk = 'no'
             },
@@ -78,7 +78,7 @@ local function check_member(cb_extra, success, result)
           save_data(_config.moderation.data, data)
 				  local hash =  'sprom:'..msg.to.id..':'..user_id
 	        redis:set(hash, true)
-          return send_large_msg(receiver, 'You have been promoted as moderator for this group.')
+          return send_large_msg(receiver, '#You have been promoted as moderator for this group.')
       end
     end
 end
@@ -89,7 +89,7 @@ local function modadd(msg)
   end
   local data = load_data(_config.moderation.data)
   if data[tostring(msg.to.id)] then
-    return 'Group is already added.'
+    return '#Group is already added.'
   end
   data[tostring(msg.to.id)] = {
     moderators ={},
@@ -103,8 +103,8 @@ local function modadd(msg)
       lock_inviteme = 'no',
       lock_sticker = 'no',
       lock_image = 'no',
-      --lock_video = 'no',
-      --lock_audio  = 'no',
+      lock_video = 'no',
+      lock_audio  = 'no',
       lock_file = 'no',
       lock_talk = 'no',
     },
@@ -117,25 +117,25 @@ end
 
 local function modrem(msg)
   if not is_admin(msg) then
-    return "You're not admin"
+    return "#You're not admin"
   end
   local data = load_data(_config.moderation.data)
   local receiver = get_receiver(msg)
   if not data[tostring(msg.to.id)] then
-    return 'Group is not added.'
+    return '#Group is not added.'
   end
 
   data[tostring(msg.to.id)] = nil
   save_data(_config.moderation.data, data)
 
-  return 'Group has been removed'
+  return '#Group has been removed'
 end
 
 local function promote(receiver, username, user_id)
   local data = load_data(_config.moderation.data)
   local group = string.gsub(receiver, '.+#id', '')
   if not data[group] then
-    return send_large_msg(receiver, 'Group is not added.')
+    return send_large_msg(receiver, '#Group is not added.')
   end
   if data[group]['moderators'][tostring(user_id)] then
     return send_large_msg(receiver, username..' is already a moderator.')
@@ -149,7 +149,7 @@ local function demote(receiver, username, user_id)
   local data = load_data(_config.moderation.data)
   local group = string.gsub(receiver, '.+#id', '')
   if not data[group] then
-    return send_large_msg(receiver, 'Group is not added.')
+    return send_large_msg(receiver, '#Group is not added.')
   end
   if not data[group]['moderators'][tostring(user_id)] then
     return send_large_msg(receiver, string.gsub(username, '@', '')..' is not a moderator.')
@@ -161,12 +161,12 @@ end
 
 local function upmanager(receiver, username, user_id)
   channel_set_admin(receiver, 'user#id'..user_id, callback, false)
-  return send_large_msg(receiver, 'Done!')
+  return send_large_msg(receiver, '#Done!')
 end
 
 local function inmanager(receiver, username, user_id)
   channel_set_unadmin(receiver, 'user#id'..user_id, callback, false)
-  return send_large_msg(receiver, 'Done!')
+  return send_large_msg(receiver, '#Done!')
 end
 
 local function admin_promote(receiver, username, user_id)  
@@ -199,14 +199,14 @@ local function admin_demote(receiver, username, user_id)
   data['admins'][tostring(user_id)] = nil
   save_data(_config.moderation.data, data)
 
-  return send_large_msg(receiver, 'Admin '..username..' has been demoted.')
+  return send_large_msg(receiver, '#Admin '..username..' has been demoted.')
 end
 
 local function username_id(cb_extra, success, result)
    local get_cmd = cb_extra.get_cmd
    local receiver = cb_extra.receiver
    local member = cb_extra.member
-   local text = 'No user @'..member..' in this group.'
+   local text = '#No user @'..member..' in this group.'
    for k,v in pairs(result.members) do
       vusername = v.username
       if vusername == member then
@@ -216,7 +216,7 @@ local function username_id(cb_extra, success, result)
             return promote(receiver, username, user_id)
         elseif get_cmd == 'demote' then
           if is_spromoted(string.gsub(receiver,'.+#id', ''), user_id) then
-            return send_large_msg(receiver, 'Can\'t demote leader')
+            return send_large_msg(receiver, '#Can\'t demote leader')
           end
           return demote(receiver, username, user_id)
         elseif get_cmd == 'adminprom' then
@@ -243,7 +243,7 @@ local function channel_username_id(cb_extra, success, result)
    local get_cmd = cb_extra.get_cmd
    local receiver = cb_extra.receiver
    local member = cb_extra.member
-   local text = 'No user @'..member..' in this group.'
+   local text = '#No user @'..member..' in this group.'
    for k,v in pairs(result) do
       vusername = v.username
       if vusername == member then
@@ -253,7 +253,7 @@ local function channel_username_id(cb_extra, success, result)
           return promote(receiver, username, user_id)
         elseif get_cmd == 'demote' then
           if is_spromoted(string.gsub(receiver,'.+#id', ''), user_id) then
-            return send_large_msg(receiver, 'Can\'t demote leader')
+            return send_large_msg(receiver, '#Can\'t demote leader')
           end
           return demote(receiver, username, user_id)
         elseif get_cmd == 'adminprom' then
@@ -329,11 +329,11 @@ end
 local function modlist(msg)
   local data = load_data(_config.moderation.data)
   if not data[tostring(msg.to.id)] then
-    return 'Group is not added.'
+    return '#Group is not added.'
   end
   -- determine if table is empty
   if next(data[tostring(msg.to.id)]['moderators']) == nil then --fix way
-    return 'No moderator in this group.'
+    return '#No moderator in this group.'
   end
   local message = 'List of moderators for ' .. string.gsub(msg.to.print_name, '_', ' ') .. ':\n'
   for k,v in pairs(data[tostring(msg.to.id)]['moderators']) do
@@ -354,7 +354,7 @@ local function admin_list(msg)
     save_data(_config.moderation.data, data)
   end
   if next(data['admins']) == nil then --fix way
-    return 'No admin available.'
+    return '#No admin available.'
   end
   local message = 'List for Bot admins:\n'
   for k,v in pairs(data['admins']) do
@@ -410,7 +410,7 @@ function run(msg, matches)
     
     if matches[1] == 'spromote' then
       if not is_admin(msg) then
-        return "Only admin can promote moderator leader"
+        return "#Only admin can promote moderator leader"
       end
       if not matches[2] and msg.reply_id then
         get_message(msg.reply_id, get_msg_callback, {get_cmd=get_cmd, receiver=receiver})
@@ -425,7 +425,7 @@ function run(msg, matches)
     
     if matches[1] == 'sdemote' then
       if not is_admin(msg) then
-        return "Only moderator can demote moderator leader"
+        return "#Only moderator can demote moderator leader"
       end
       if not matches[2] and msg.reply_id then
         get_message(msg.reply_id, get_msg_callback, {get_cmd=get_cmd, receiver=receiver})
@@ -447,7 +447,7 @@ function run(msg, matches)
     
     if matches[1] == 'adminprom' then
       if not is_admin(msg) then
-        return "Only sudo can promote user as admin"
+        return "#Only sudo can promote user as admin"
       end
       local member = string.gsub(matches[2], "@", "")
       chat_info(receiver, username_id, {get_cmd= get_cmd, receiver=receiver, member=member})
@@ -455,7 +455,7 @@ function run(msg, matches)
     
     if matches[1] == 'admindem' then
       if not is_admin(msg) then
-        return "Only sudo can promote user as admin"
+        return "#Only sudo can promote user as admin"
       end
       if string.match(matches[2], '^%d+$') then
         admin_demote(receiver, matches[2], matches[2])
@@ -467,7 +467,7 @@ function run(msg, matches)
     
     if matches[1] == 'adminlist' then
       if not is_admin(msg) then
-        return 'Admin only!'
+        return '#Admin only!'
       end
       return admin_list(msg)
     end
@@ -519,14 +519,14 @@ function run(msg, matches)
       end
       if string.gsub(matches[2], "@", "") == msg.from.username then
         return "You can't demote yourself"
-      end
+      end#
       local member = string.gsub(matches[2], "@", "")
       channel_get_users(receiver, channel_username_id, {get_cmd= get_cmd, receiver=receiver, member=member})
     end
     
     if matches[1] == 'spromote' then
       if not is_admin(msg) then
-        return "Only admin can promote moderator leader"
+        return "#Only admin can promote moderator leader"
       end
       if not matches[2] and msg.reply_id then
         get_message(msg.reply_id, get_msg_callback, {get_cmd=get_cmd, receiver=receiver})
@@ -541,7 +541,7 @@ function run(msg, matches)
     
     if matches[1] == 'sdemote' then
       if not is_admin(msg) then
-        return "Only moderator can demote moderator leader"
+        return "#Only moderator can demote moderator leader"
       end
       if not matches[2] and msg.reply_id then
         get_message(msg.reply_id, get_msg_callback, {get_cmd=get_cmd, receiver=receiver})
@@ -564,7 +564,7 @@ function run(msg, matches)
     if matches[1] == 'upmanager' then
       if not is_admin(msg) then
         if not is_spromoted(msg.to.id, msg.from.id) then
-          return "You're not a leader"
+          return "#You're not a leader"
         end
       end
       if not matches[2] and msg.reply_id then
@@ -584,7 +584,7 @@ function run(msg, matches)
     if matches[1] == 'inmanager' then
       if not is_admin(msg) then
         if not is_spromoted(msg.to.id, msg.from.id) then
-          return "You're not a leader"
+          return "#You're not a leader"
         end
       end
       if not matches[2] and msg.reply_id then
@@ -603,7 +603,7 @@ function run(msg, matches)
     
     if matches[1] == 'adminprom' then
       if not is_admin(msg) then
-        return "Only sudo can promote user as admin"
+        return "#Only sudo can promote user as admin"
       end
       local member = string.gsub(matches[2], "@", "")
       channel_get_users(receiver, channel_username_id, {get_cmd= get_cmd, receiver=receiver, member=member})
@@ -611,7 +611,7 @@ function run(msg, matches)
     
     if matches[1] == 'admindem' then
       if not is_admin(msg) then
-        return "Only sudo can promote user as admin"
+        return "#Only sudo can promote user as admin"
       end
       if string.match(matches[2], '^%d+$') then
         admin_demote(receiver, matches[2], matches[2])
@@ -623,7 +623,7 @@ function run(msg, matches)
     
     if matches[1] == 'adminlist' then
       if not is_admin(msg) then
-        return 'Admin only!'
+        return '#Admin only!'
       end
       return admin_list(msg)
     end
@@ -663,24 +663,24 @@ return {
           },
       },
   patterns = {
-    "^/(modadd)$",
-    "^/(modrem)$",
-    "^/(spromote) (.*)$",
-    "^/(spromote)$",
-    "^/(sdemote) (.*)$",
-    "^/(sdemote)$",
-    "^/(promote) (.*)$",
-    "^/(promote)$",
-    "^/(demote) (.*)$",
-    "^/(demote)$",
-    "^/(upmanager) (.*)$",
-    "^/(upmanager)",
-    "^/(inmanager) (.*)$",
-    "^/(inmanager)",
-    "^/(modlist)$",
-    "^/(adminprom) (.*)$", -- sudoers only
-    "^/(admindem) (.*)$", -- sudoers only
-    "^/(adminlist)$",
+    "^modadd$",
+    "^modrem$",
+    "^spromote (.*)$",
+    "^spromote$",
+    "^sdemote (.*)$",
+    "^sdemote$",
+    "^promote (.*)$",
+    "^promote$",
+    "^demote (.*)$",
+    "^demote$",
+    "^upmanager (.*)$",
+    "^upmanager",
+    "^inmanager (.*)$",
+    "^inmanager",
+    "^modlist$",
+    "^adminprom (.*)$", -- sudoers only
+    "^admindem (.*)$", -- sudoers only
+    "^adminlist$",
     "^!!tgservice (chat_add_user)$",
     "^!!tgservice (chat_created)$",
   }, 
