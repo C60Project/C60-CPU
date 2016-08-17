@@ -4,7 +4,7 @@ local function mathjs(exp)
   local b,c = http.request(url)
   local text = nil
   if c == 200 then
-    text = '#Calculated\nResult: '..b
+    text = '#Calculated✔\nResult: '..b
   
   elseif c == 400 then
     text = b
