@@ -10,7 +10,7 @@ local function generate_link(cb_extra, success, result)
     local user_id = cb_extra.user_id
     local chat_id = string.gsub(receiver, '.+#id', '')
     if success == 0 then
-      return send_large_msg(receiver, "Can't generate invite link for this group")
+      return send_large_msg(receiver, "#Can't generate invite link for this group")
     end
     data[tostring(chat_id)]['link'] = result
     save_data(_config.moderation.data, data)
@@ -23,7 +23,7 @@ local function kick_user(user_id, chat_id)
   local user = 'user#id'..user_id
   chat_del_user(chat, user, function (data, success, result)
     if success ~= 1 then
-      local text = 'I can\'t kick '..data.user..' but he should be kicked'
+      local text = '#I can\'t kick '..data.user..' but he should be kicked'
       send_msg(data.chat, '', ok_cb, nil)
     end
   end, {chat=chat, user=user})
@@ -34,7 +34,7 @@ local function kick_user_chan(user_id, chat_id)
   local user = 'user#id'..user_id
   channel_kick_user(channel, user, function (data, success, result)
     if success ~= 1 then
-      local text = 'I can\'t kick '..data.user..' but he should be kicked'
+      local text = '#I can\'t kick '..data.user..' but he should be kicked'
       send_msg(data.chat, '', ok_cb, nil)
     end
   end, {chat=chat, user=user})
@@ -46,30 +46,30 @@ end
 
 local function set_description(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local data_cat = 'description'
     data[tostring(msg.to.id)][data_cat] = deskripsi
     save_data(_config.moderation.data, data)
 
-    return 'Set group description to:\n'..deskripsi
+    return '#Set group description to:\n'..deskripsi
 end
 
 local function set_description_chan(msg, data, deskripsi)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local data_cat = 'description'
     data[tostring(msg.to.id)][data_cat] = deskripsi
     save_data(_config.moderation.data, data)
     channel_set_about('channel#id'..msg.to.id, deskripsi, ok_cb, false)
-    return 'Set group description to:\n'..deskripsi
+    return '#Set group description to:\n'..deskripsi
 end
 
 local function get_description(msg, data)
     local data_cat = 'description'
     if not data[tostring(msg.to.id)][data_cat] then
-        return 'No description available.'
+        return '#No description'
     end
     local about = data[tostring(msg.to.id)][data_cat]
     local about = string.gsub(msg.to.print_name, "_", " ")..':\n\n'..about
@@ -78,19 +78,19 @@ end
 
 local function set_rules(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local data_cat = 'rules'
     data[tostring(msg.to.id)][data_cat] = rules
     save_data(_config.moderation.data, data)
 
-    return 'Set group rules to:\n'..rules
+    return '#Set group rules to:\n'..rules
 end
 
 local function get_rules(msg, data)
     local data_cat = 'rules'
     if not data[tostring(msg.to.id)][data_cat] then
-        return 'No rules available.'
+        return '#No rules'
     end
     local rules = data[tostring(msg.to.id)][data_cat]
     local rules = string.gsub(msg.to.print_name, '_', ' ')..' rules:\n\n'..rules
@@ -99,113 +99,113 @@ end
 
 local function lock_group_name(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_name_set = data[tostring(msg.to.id)]['settings']['set_name']
     local group_name_lock = data[tostring(msg.to.id)]['settings']['lock_name']
     if group_name_lock == 'yes' then
-        return 'Group name is already locked'
+        return '#Already locked'
     else
         data[tostring(msg.to.id)]['settings']['lock_name'] = 'yes'
         save_data(_config.moderation.data, data)
         data[tostring(msg.to.id)]['settings']['set_name'] = string.gsub(msg.to.print_name, '_', ' ')
         save_data(_config.moderation.data, data)
-    return 'Group name has been locked'
+    return '#Group name locked'
     end
 end
 
 local function unlock_group_name(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_name_set = data[tostring(msg.to.id)]['settings']['set_name']
     local group_name_lock = data[tostring(msg.to.id)]['settings']['lock_name']
     if group_name_lock == 'no' then
-        return 'Group name is already unlocked'
+        return '#Already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_name'] = 'no'
         save_data(_config.moderation.data, data)
-    return 'Group name has been unlocked'
+    return '#Group name unlocked'
     end
 end
 
 local function lock_group_member(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_member_lock = data[tostring(msg.to.id)]['settings']['lock_member']
     if group_member_lock == 'yes' then
-        return 'Group members are already locked'
+        return '#Already locked'
     else
         data[tostring(msg.to.id)]['settings']['lock_member'] = 'yes'
         save_data(_config.moderation.data, data)
     end
-    return 'Group members has been locked'
+    return '#Group members locked'
 end
 
 local function unlock_group_member(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_member_lock = data[tostring(msg.to.id)]['settings']['lock_member']
     if group_member_lock == 'no' then
-        return 'Group members are not locked'
+        return '#Already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_member'] = 'no'
         save_data(_config.moderation.data, data)
-    return 'Group members has been unlocked'
+    return '#Group members unlocked'
     end
 end
 
 local function lock_group_bot(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_bot_lock = data[tostring(msg.to.id)]['settings']['lock_bot']
     if group_bot_lock == 'yes' then
-        return 'Anti bot already locked'
+        return '#Already locked'
     else
         data[tostring(msg.to.id)]['settings']['lock_bot'] = 'yes'
         save_data(_config.moderation.data, data)
     end
-    return 'Anti bot has been locked'
+    return '#Bots locked'
 end
 
 local function unlock_group_bot(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only"
     end
     local group_bot_lock = data[tostring(msg.to.id)]['settings']['lock_bot']
     if group_bot_lock == 'no' then
-        return 'Anti bot is not locked'
+        return '#Already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_bot'] = 'no'
         save_data(_config.moderation.data, data)
-    return 'Anti bot has been unlocked'
+    return '#Bots unlocked'
     end
 end
 
 local function lock_group_link(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only!"
     end
     local group_link_lock = data[tostring(msg.to.id)]['settings']['lock_link']
     if group_link_lock == 'yes' then
-        return 'Anti link already locked'
+        return '#Already locked'
     else
         data[tostring(msg.to.id)]['settings']['lock_link'] = 'yes'
         save_data(_config.moderation.data, data)
     end
-    return 'Anti link has been locked'
+    return '#Links locked'
 end
 
 local function unlock_group_link(msg, data)
     if not is_momod(msg) then
-        return "For moderators only!"
+        return "#Moderators only!"
     end
     local group_link_lock = data[tostring(msg.to.id)]['settings']['lock_link']
     if group_link_lock == 'no' then
-        return 'Anti link is not locked'
+        return '#Already unlocked'
     else
         data[tostring(msg.to.id)]['settings']['lock_link'] = 'no'
         save_data(_config.moderation.data, data)
