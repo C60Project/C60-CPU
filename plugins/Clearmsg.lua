@@ -9,7 +9,7 @@ function run(msg, matches)
 end
 
 return {
-    description = "delete messages by reply, 
+    description = "delete messages by reply", 
     usage = "",
     patterns = {
       "^/clear$"
