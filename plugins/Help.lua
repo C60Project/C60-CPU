@@ -60,6 +60,7 @@ local function run(msg, matches)
 #- ban : by <reply|id|username>
 #- unban : by <reply|id|username>
 #- kickme
+#- clear : by <reply to a message>
 
 
 ✅Gp Moderator
